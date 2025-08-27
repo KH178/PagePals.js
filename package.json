@@ -1,0 +1,28 @@
+{
+  "name": "PagePals",
+  "version": "1.0.0",
+  "description": "A modular and high-performance web library for creating interactive avatars on websites. The avatars can interact with text elements on a page, providing a unique and engaging user experience.",
+  "main": "dist/main.js",
+  "module": "dist/main.mjs",
+  "scripts": {
+    "start": "parcel index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KH178/PagePals.js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KH178/PagePals.js/issues"
+  },
+  "homepage": "https://github.com/KH178/PagePals.js#readme",
+  "dependencies": {
+    "three": "^0.179.1"
+  },
+  "devDependencies": {
+    "parcel": "^2.15.4"
+  }
+}

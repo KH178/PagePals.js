@@ -1,11 +1,17 @@
 
+import TextCollision from './TextCollision.js';
+
 class Physics {
-    constructor() {
-        this.collisionObjects = [];
+    constructor(scene, gameDocument, camera, renderer) {
+        this.textCollision = new TextCollision(scene, gameDocument, camera, renderer);
     }
 
-    addCollisionObject(object) {
-        this.collisionObjects.push(object);
+    scanText() {
+        this.textCollision.scanText();
+    }
+
+    toggleDebug() {
+        this.textCollision.toggleDebug();
     }
 
     detectCollisions(avatar) {

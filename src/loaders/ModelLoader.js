@@ -1,5 +1,5 @@
 
-import * as THREE from '../lib/three.min.js';
+import * as THREE from 'three';
 
 class ModelLoader {
     constructor() {
