@@ -18,34 +18,57 @@ class TextCollision {
     const textElements = this.gameDocument.querySelectorAll(
       "p, h1, h2, h3, h4, h5, h6, a, span, li, text"
     );
+
     textElements.forEach((element) => {
-      const rect = element.getBoundingClientRect();
-
-      // Convert screen coordinates to world coordinates
-      const width = this.renderer.domElement.clientWidth;
-      const height = this.renderer.domElement.clientHeight;
-
-      const topLeft = new THREE.Vector3(
-        (rect.left / width) * 2 - 1,
-        -(rect.top / height) * 2 + 1,
-        0 // Z-coordinate, adjust as needed
-      );
-      const bottomRight = new THREE.Vector3(
-        (rect.right / width) * 2 - 1,
-        -(rect.bottom / height) * 2 + 1,
-        0 // Z-coordinate, adjust as needed
+      const walker = this.gameDocument.createTreeWalker(
+        element,
+        NodeFilter.SHOW_TEXT,
+        null,
+        false
       );
 
-      topLeft.unproject(this.camera);
-      bottomRight.unproject(this.camera);
+      let node;
+      while ((node = walker.nextNode())) {
+        const words = node.nodeValue.split(/\s+/).filter(word => word.length > 0);
+        let offset = 0;
+        words.forEach(word => {
+          const range = this.gameDocument.createRange();
+          range.setStart(node, node.nodeValue.indexOf(word, offset));
+          range.setEnd(node, range.startOffset + word.length);
+          offset = range.endOffset;
 
-      const box = new THREE.Box3();
-      box.setFromPoints([topLeft, bottomRight]);
-      this.collisionBoxes.push(box);
+          const clientRects = range.getClientRects();
+          for (let i = 0; i < clientRects.length; i++) {
+            const rect = clientRects[i];
 
-      if (this.debug) {
-        const helper = new THREE.Box3Helper(box, 0xff00ff);
-        this.debugGroup.add(helper);
+            // Convert screen coordinates to world coordinates
+            const width = this.renderer.domElement.clientWidth;
+            const height = this.renderer.domElement.clientHeight;
+
+            const topLeft = new THREE.Vector3(
+              (rect.left / width) * 2 - 1,
+              -(rect.top / height) * 2 + 1,
+              0 // Z-coordinate, adjust as needed
+            );
+            const bottomRight = new THREE.Vector3(
+              (rect.right / width) * 2 - 1,
+              -(rect.bottom / height) * 2 + 1,
+              0 // Z-coordinate, adjust as needed
+            );
+
+            topLeft.unproject(this.camera);
+            bottomRight.unproject(this.camera);
+
+            const box = new THREE.Box3();
+            box.setFromPoints([topLeft, bottomRight]);
+            this.collisionBoxes.push(box);
+
+            if (this.debug) {
+              const helper = new THREE.Box3Helper(box, 0xff00ff);
+              this.debugGroup.add(helper);
+            }
+          }
+        });
       }
     });
   }
